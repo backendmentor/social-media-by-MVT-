@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<form class="card" method="post"  >
+{% csrf_token %}
+
+{{ form }}
+<br>
+    {% for obj in content %}
+    {{ obj.content }}
+    {% endfor %}
+<input type="submit" class="btn btn-primary" value="Update">
+</form>
+
+{% endblock %}

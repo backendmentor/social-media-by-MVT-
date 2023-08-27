@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <form action="" method="get">
+    {{ form.as_p }}
+    <input  value="SEARCH" type="submit">
+    </form>
+     {% if request.user.is_authenticated %}
+            {% if request.user.id != user.id and not is_following %}
+                <a href="{% url 'accounts:follow' user_id=user.id %}" class="btn btn-danger">Follow</a>
+            {% elif request.user.id != user.id and is_following %}
+                <a href="{% url 'accounts:unfollow' user_id=user.id %}" class="btn btn-danger">Unfollow</a>
+            {% endif %}
+        {% else %}
+            <p>Please log in to follow this user.</p>
+        {% endif %}
+{% for post in posts %}
+    <div class="card">
+    <a class="card-body" href="{{ post.get_absolute_url }}">{{ post.user.username }}</a>
+{#    <p>{{ post.content }}</p>#}
+{#    {% for comment in post.comment_set.all %}#}
+{#       <p>{{ comment.content|truncatewords:10 }}</p>#}
+{#    {% endfor %}#}
+{% endfor %}
+    </div>
+{% endblock %}

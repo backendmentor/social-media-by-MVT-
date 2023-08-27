@@ -1,0 +1,81 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+    {% if request.user.is_authenticated %}
+        <a class="btn btn-primary" href="{% url 'home:like_view' post.id  %}"> Like{{ post.count_likes }}</a>
+
+    {% endif %}
+
+    <div class="card">
+   {{ post.user }} : {{ post.title }} , {{ post.created_data|date:"Y-M" }}
+    <br>
+    {{ post.slug }}
+    </div>
+    {% if user.is_authenticated %}
+<form  method="post" action="" >
+{% csrf_token %}
+{{ form.as_p }}
+<input type="submit" value="SEND" class="button">
+</form>
+{% else %}
+        <h4 class="alert alert-danger"> please Login jus with login you can send your post </h4>
+    {% endif %}
+    <div class="content">
+     <h4> User:</h4>{{ post.user }}
+        <br>
+        <h6>image:</h6>
+    {{ post.image}}
+<br>   <h6>likes</h6>
+        {{ post.liks }}
+        <br>
+        <h5>comment</h5>
+    {{ post.content }}
+    {{ post.update_data }}
+    </div>
+    <br>
+        {% if request.user.id == post.user.id %}
+        <a href="{% url 'home:delete_detail' post.id %}" class="btn btn-danger">DELETE</a>
+        <a href="{% url 'home:update_detail' post.id %}" class='btn btn-primary'>Update</a>
+            <a href="{% url 'home:create_detail' %}" class='btn btn-primary'>Create</a>
+
+
+
+{% endif %}
+       {% for comment in comments%}
+
+    <div class="crard bg-dark text-white">
+    <p class="card-header">
+
+        {{ comment.user }} | {{ comment.created_data|timesince}}
+    </p>
+
+{% if request.user.is_authenticated %}
+    <form action="{% url 'home:add_reply' post.id comment.id  %}" method="post" >
+    {% csrf_token %}
+    {{ reply_from.as_p }}
+
+<input type="submit" value="SEN REPLY" class="button">
+    </form>
+    {% endif %}
+
+
+          <p class="card-body">{{ comment.content }}</p>
+        {% for reply in comment.reply_comment.all %}
+            <p class="bg-info m-2 p-2">{{ reply.user }}<br/>{{ reply.content }}</p>
+        {% endfor %}
+    </div>
+
+           {% empty %}
+           <h6 class="heading-text"> No Comment! </h6>
+     {% endfor %}
+
+{% endblock %}
+
+
+
+
+
+
+
+

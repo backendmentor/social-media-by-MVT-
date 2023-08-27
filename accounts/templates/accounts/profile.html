@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+{% block content %}
+
+    {% if request.user.id == user.id %}
+            <a href="{% url "home:create_detail" %}" class="btn btn-danger">CREATE</a>
+            <a href="{% url "accounts:editporfile" %}" class="btn btn-danger">EDIT</a>
+        {% endif %}
+         {% if request.user.id != user.id and not is_following %}
+            <a href="{% url "accounts:follow" user.id %}" class="btn btn-danger">Follow</a>
+        {% elif request.user.id != user.id and is_following %}
+            <a href="{% url "accounts:unfollow" user_id=user.id %}" class="btn btn-danger">Unfollow</a>
+        {% endif %}
+
+
+    <br>
+    <p class="text-center">
+        {{ user.username }}
+        <br>
+        {{ user.email }}
+    </p>
+    {% for post in post %}
+        <div class="card">
+            {{ post.user }}  {{ post.title }}  {{ post.created_data|date:"Y-M" }}
+        </div>
+
+        <div class="content">
+            {% if post.image %}
+                <img src="{{ post.image.url }}" alt="{{ post.title }}">
+            {% endif %}
+            <p>Likes: {{ post.liks.all|join:", " }}</p>
+            {{ post.content }}
+            {{ post.update_data }}
+        </div>
+    {% endfor %}
+
+
+
+
+
+
+
+{% endblock %}
